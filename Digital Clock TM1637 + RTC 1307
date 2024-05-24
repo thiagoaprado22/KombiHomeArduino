@@ -18,6 +18,12 @@ Circuit Diagram
 
  Code for the mini Projec 
 
+
+ // TECHATRONIC.COM  
+ // LIBRARY TM1637Display  
+ // https://github.com/avishorp/TM1637  
+ // LIBRARY RTClib   
+ // https://github.com/adafruit/RTClib  
  #include "RTClib.h"  
  #include <TM1637Display.h>  
  // Define the connections pins for TM1637 4 digit 7 segment display  
@@ -68,4 +74,4 @@ Circuit Diagram
   delay(1000);  
   display.showNumberDec(displaytime, true); // Prints displaytime without center colon.  
   delay(1000);  
- } 
+ }  
