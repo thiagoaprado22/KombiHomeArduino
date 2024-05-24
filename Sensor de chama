@@ -1,0 +1,29 @@
+// coom buzzer e escrita de tudo certo na janela serial
+
+int sensorChama = 2; //declaração da variável do sensor
+int Buzzer = 13; 
+int Var = 0;
+
+void setup() { 
+pinMode(sensorChama, INPUT); //Configuração do pino do sensor como entrada 
+pinMode(Buzzer, OUTPUT);
+pinMode(sensorChama, INPUT);
+Serial.begin(9600); // Configuração da comunicação serial 
+} 
+void loop() { 
+  int leituraSensor = digitalRead(sensorChama);// Passando o valor obtido no sensor para a variável "leituraSensor" 
+
+  // Se for detectado o espectro IR da chama imprime no serial "Pegou fogo!" 
+  if (leituraSensor == LOW) { Serial.println("Pegou fogo!"); 
+  digitalWrite(Buzzer, HIGH); 
+  delay(100);
+  } 
+
+  // Se NÃO for detectado o espectro IR da chama imprime no serial "Tudo certo." 
+  else { Serial.println("Tudo certo.");
+  digitalWrite(Buzzer, LOW);
+  delay(20); } 
+
+  delay(1000);//intervalo entre as leituras e respostas 
+
+} // fim do código :)
