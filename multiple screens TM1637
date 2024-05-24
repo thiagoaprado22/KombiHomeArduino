@@ -1,0 +1,162 @@
+#include <TM1637Display.h>
+#include <TM1637Display.h>
+#include <Thermistor.h>
+
+#define SCL 8
+#define SDA 9
+
+// Declara o objeto TM1637Display
+TM1637Display display(SCL, SDA, DEFAULT_BIT_DELAY);
+
+// Thermistor
+
+const byte pinBut =12;
+const byte pinPot = A0;
+
+Thermistor temp(1); // termistor conectado na porta A1 (cria o objeto)
+
+byte controle = 0;
+uint32_t temporizador = 0;
+
+float displayTemp;
+
+//      -         A
+//    |   |     F   B
+//      -         G
+//    |   |     E   C
+//      -         D
+
+const uint8_t DEGREEC[] = {
+   0x0, 0x0,
+   SEG_A | SEG_B | SEG_G | SEG_F,    // Degree Symbol
+   SEG_A | SEG_F | SEG_E | SEG_D,    // C
+   };
+
+const uint8_t DEGREEF[] = {
+   0x0, 0x0,
+   SEG_A | SEG_B | SEG_G | SEG_F,    // Degree Symbol
+   SEG_A | SEG_F | SEG_E | SEG_G,    // F
+   };   
+
+// Define o padrão para exibir o retângulo
+const uint8_t ret[] =
+{
+  SEG_A|SEG_F|SEG_E|SEG_D,
+  SEG_A|SEG_D,
+  SEG_A|SEG_D,
+  SEG_A|SEG_B|SEG_C|SEG_D
+};
+
+const uint8_t one_seg[] = { SEG_G };
+const uint8_t turn_off_one_seg[] = { 0x00 };
+
+// Função que realiza uma animação no display
+void animation()
+{
+  int i;
+ 
+  // Animação de ida
+  for (i = 0; i < 4; i++)
+  {
+	display.setSegments(one_seg, 1, i); // Mostra o segmento no índice i
+	delay(500);
+	display.setSegments(turn_off_one_seg, 1, i); // Desliga o segmento no índice i
+  }
+ 
+  // Animação de volta
+  for (i = 3; i >= 0; i--)
+  {
+	display.setSegments(one_seg, 1, i);
+	delay(500);
+	display.setSegments(turn_off_one_seg, 1, i);
+  }
+}
+
+void setup()
+{
+  // Inicializa a comunicação serial na velocidade de 115200 bps
+  Serial.begin(9600);
+ 
+  // Define a intensidade luminosa do display (0-7)
+  display.setBrightness(5);
+ 
+  // Limpa o display
+  display.clear();
+
+  // Formato para mostrar hora e minuto (14:15)
+  int time_in_display = (14 * 100) + 15;
+  display.showNumberDecEx(time_in_display, 0b11100000, true);
+  delay(1500);
+  display.clear();
+ 
+  // Cria um retângulo no display
+  display.setSegments(ret, 4, 0);
+  delay(1500);
+  display.clear();
+
+  // Mostra o número -10 no display
+  display.showNumberDec(-10);  
+  delay(1500);
+  display.clear();
+ 
+  // Mostra o número 15 no display (com o sinal de menos)
+  display.showNumberDec(15, true);
+  delay(1500);
+  display.clear();
+ 
+  // Mostra o número 20 no display (sem o sinal de menos) com dois dígitos (20)
+  display.showNumberDec(20, false, 2, 1);
+  delay(2000);
+  display.clear();
+//Thermistor
+  pinMode(pinBut, INPUT_PULLUP);
+  Serial.begin(9600); 
+  display.setBrightness(7);
+}
+
+void loop() {
+  brilho(); // ajusta brilho dos leds do display
+  float temperature = temp.getTemp(); //calcula a temperatura
+  
+  float tempC = temperature; // Celsius
+  float tempF = ((temperature * 1.8)+32); // Converte para Fahrenheit
+
+  // verifica se o botão foi pressionado e muda o controle
+  if(!digitalRead(pinBut)) {
+    controle = !controle;
+    while (!digitalRead(pinBut)) {  }  //esperera soltar o botão
+    delay(50);
+  }
+
+  switch (controle) {
+    case 0:
+      displayTemp = tempC;
+      showTemperature(0);
+      break;
+    case 1:
+      displayTemp = tempF;
+      showTemperature(1);    
+  }
+}  
+      
+void showTemperature(byte x) {
+   if ((millis() - temporizador) >=8000) { // Presumi que esse temporizador fosse o tempo entre as medições que estav rapidas e faziam o display oscilar 
+      Serial.println(displayTemp);
+      if (x==0) {
+         display.setSegments(DEGREEC); //Exibe o valor da variável 
+      } else {
+         display.setSegments(DEGREEF); //Exibe o valor da variável   
+      }
+      display.showNumberDec(displayTemp,false,2,0);
+      temporizador = millis();
+  }
+}
+
+void brilho() {
+  // Lê valor do potenciômetro (0 a 1023)
+  int valor = analogRead(pinPot);
+  // Converte valor do potenciêmtro para valor de 0 a 7
+  int potVal = map(valor, 0, 1023, 0, 7);
+  // Ajusta o brilho dos leds (segmentos) entre 0 e 7
+  display.setBrightness(potVal);
+}
