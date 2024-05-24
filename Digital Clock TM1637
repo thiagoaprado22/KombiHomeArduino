@@ -1,5 +1,17 @@
-Digital Clock Using TM1637 Display and RTC
+#Digital Clock Using TM1637 Display and RTC
 
 Objetivo
 
+Neste projeto vamos mostrar como utilizar o display TM1637 em conjunto com o módulo  RTC DS3231 DS3231 e criar um relógio digital (horas e minutos) com
+mostrador de temperatura para  Arduino. 
+
+###Componentes necessários
+
 Circuit Diagram
+
+
+Módulo TM1637 - 4 dígitos
+
+Módulo  RTC DS1307
+
+Arduino UNO
