@@ -1,0 +1,103 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Defina o endereço I2C do display LCD
+#define LCD_ADDRESS 0x27
+
+// Define os pinos dos botões
+#define BUTTON_UP 2
+#define BUTTON_DOWN 3
+
+// Define os pinos dos LEDs para indicar valores máximos e normais dos gases
+#define MAX_VALUE_LED_PIN_1 13
+#define NORMAL_VALUE_LED_PIN_1 12
+#define MAX_VALUE_LED_PIN_2 11
+#define NORMAL_VALUE_LED_PIN_2 10
+#define MAX_VALUE_LED_PIN_3 9
+#define NORMAL_VALUE_LED_PIN_3 8
+
+// Inicialize o objeto do display LCD
+LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
+
+// Array para armazenar os pinos dos sensores de gás
+const int gasSensorPins[] = {A0, A1, A2}; // Exemplo com 3 sensores, ajuste conforme necessário
+
+// Array para armazenar os nomes dos gases
+const char* gasNames[] = {"Gas1", "Gas2", "Gas3"}; // Ajuste conforme os gases que você está medindo
+
+// Array para armazenar os valores máximos dos gases
+const int maxGasValues[] = {500, 600, 700}; // Ajuste conforme os valores máximos desejados
+
+// Array para armazenar os valores mínimos dos gases (assumindo 0 como valor mínimo)
+const int minGasValues[] = {100, 200, 300}; // Ajuste conforme os valores mínimos desejados
+
+// Variáveis para controlar a exibição dos valores dos sensores
+int currentGasIndex = 0;
+
+void setup() {
+  // Inicializa o display LCD
+  lcd.init();
+  lcd.backlight();
+  
+  // Define os pinos dos botões como entrada
+  pinMode(BUTTON_UP, INPUT_PULLUP);
+  pinMode(BUTTON_DOWN, INPUT_PULLUP);
+  
+  // Define os pinos dos LEDs como saída
+  pinMode(MAX_VALUE_LED_PIN_1, OUTPUT);
+  pinMode(NORMAL_VALUE_LED_PIN_1, OUTPUT);
+  pinMode(MAX_VALUE_LED_PIN_2, OUTPUT);
+  pinMode(NORMAL_VALUE_LED_PIN_2, OUTPUT);
+  pinMode(MAX_VALUE_LED_PIN_3, OUTPUT);
+  pinMode(NORMAL_VALUE_LED_PIN_3, OUTPUT);
+  
+  // Inicializa a comunicação serial
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Lê o valor do sensor de gás atual
+  int gasValue = analogRead(gasSensorPins[currentGasIndex]);
+  
+  // Exibe o valor do sensor no display LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(gasNames[currentGasIndex]);
+  lcd.setCursor(0, 1);
+  lcd.print("Gas Value: ");
+  lcd.print(gasValue);
+  
+  // Exibe o valor do sensor no monitor serial
+  Serial.print(gasNames[currentGasIndex]);
+  Serial.print(" Gas Value: ");
+  Serial.println(gasValue);
+  
+  // Verifica se o valor do sensor está dentro do intervalo normal
+  if (gasValue >= minGasValues[currentGasIndex] && gasValue <= maxGasValues[currentGasIndex]) {
+    digitalWrite(NORMAL_VALUE_LED_PIN_1 + currentGasIndex, HIGH);
+  } else {
+    digitalWrite(NORMAL_VALUE_LED_PIN_1 + currentGasIndex, LOW);
+  }
+  
+  // Verifica se o valor do sensor atingiu o máximo
+  if (gasValue >= maxGasValues[currentGasIndex]) {
+    digitalWrite(MAX_VALUE_LED_PIN_1 + currentGasIndex, HIGH);
+  } else {
+    digitalWrite(MAX_VALUE_LED_PIN_1 + currentGasIndex, LOW);
+  }
+  
+  // Verifica se o botão UP foi pressionado para navegar para o próximo sensor
+  if (digitalRead(BUTTON_UP) == LOW) {
+    currentGasIndex = (currentGasIndex + 1) % (sizeof(gasSensorPins) / sizeof(gasSensorPins[0]));
+    delay(200); // debounce
+  }
+  
+  // Verifica se o botão DOWN foi pressionado para navegar para o sensor anterior
+  if (digitalRead(BUTTON_DOWN) == LOW) {
+    currentGasIndex = (currentGasIndex - 1 + sizeof(gasSensorPins) / sizeof(gasSensorPins[0])) % (sizeof(gasSensorPins) / sizeof(gasSensorPins[0]));
+    delay(200); // debounce
+  }
+  
+  // Aguarda um curto período de tempo antes da próxima leitura
+  delay(1000);
+}
