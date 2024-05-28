@@ -1,0 +1,60 @@
+// Definição dos pinos dos sensores
+const int sensorPin1 = A0; // Pino analógico para o sensor 1
+const int sensorPin2 = A1; // Pino analógico para o sensor 2
+const int sensorPin3 = A2; // Pino analógico para o sensor 3
+
+// Definição dos pinos dos LEDs
+const int ledPin1 = 2; // Pino digital para o LED 1
+const int ledPin2 = 3; // Pino digital para o LED 2
+const int ledPin3 = 4; // Pino digital para o LED 3
+
+// Definição dos valores máximos para cada sensor
+const int maxValue1 = 200; // Valor máximo para o sensor 1
+const int maxValue2 = 100; // Valor máximo para o sensor 2
+const int maxValue3 = 60; // Valor máximo para o sensor 3
+
+void setup() {
+  Serial.begin(9600); // Inicia a comunicação serial
+  
+  // Define os pinos dos LEDs como saída
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
+}
+
+void loop() {
+  // Leitura dos valores dos sensores
+  int sensorValue1 = analogRead(sensorPin1);
+  int sensorValue2 = analogRead(sensorPin2);
+  int sensorValue3 = analogRead(sensorPin3);
+
+  // Exibir os valores lidos no monitor serial
+  Serial.print("Sensor 1: ");
+  if (sensorValue1 == -1) {
+    Serial.println("Erro de leitura!");
+  } else {
+    Serial.println(sensorValue1);
+    // Acende o LED se o valor lido for maior que o valor máximo
+    digitalWrite(ledPin1, sensorValue1 > maxValue1 ? HIGH : LOW);
+  }
+
+  Serial.print("Sensor 2: ");
+  if (sensorValue2 == -1) {
+    Serial.println("Erro de leitura!");
+  } else {
+    Serial.println(sensorValue2);
+    // Acende o LED se o valor lido for maior que o valor máximo
+    digitalWrite(ledPin2, sensorValue2 > maxValue2 ? HIGH : LOW);
+  }
+
+  Serial.print("Sensor 3: ");
+  if (sensorValue3 == -1) {
+    Serial.println("Erro de leitura!");
+  } else {
+    Serial.println(sensorValue3);
+    // Acende o LED se o valor lido for maior que o valor máximo
+    digitalWrite(ledPin3, sensorValue3 > maxValue3 ? HIGH : LOW);
+  }
+
+  delay(1000); // Espera 1 segundo antes de fazer a próxima leitura
+}
