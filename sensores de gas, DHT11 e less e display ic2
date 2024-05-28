@@ -15,7 +15,7 @@ const int ledPin3 = 4; // Pino digital para o LED 3
 // Definição dos valores máximos para cada sensor de gás
 const int maxValue1 = 200; // Valor máximo para o sensor 1
 const int maxValue2 = 100; // Valor máximo para o sensor 2
-const int maxValue3 = 60; // Valor máximo para o sensor 3
+const int maxValue3 = 80; // Valor máximo para o sensor 3
 
 // Inicialização do sensor DHT11
 #define DHTPIN 7          // Pino de dados do sensor DHT11
@@ -48,21 +48,21 @@ void loop() {
   // Atualiza o display de acordo com a tela atual
   switch (currentScreen) {
     case 0:
-      displaySensorValue(sensorPin1, "Sensor 1");
+      displaySensorValue(sensorPin1, "Sensor de Alcool ");
       break;
     case 1:
-      displaySensorValue(sensorPin2, "Sensor 2");
+      displaySensorValue(sensorPin2, "Sensor de GLP");
       break;
     case 2:
-      displaySensorValue(sensorPin3, "Sensor 3");
+      displaySensorValue(sensorPin3, "Sensor de CO");
       break;
     case 3:
       displayDHTValues();
       break;
   }
 
-  // Aguarda 5 segundos antes de mudar para a próxima tela
-  delay(5000);
+  // Aguarda 2 segundos antes de mudar para a próxima tela
+  delay(2000);
 
   // Limpa o display antes de exibir a próxima tela
   lcd.clear();
@@ -78,6 +78,7 @@ void displaySensorValue(int pin, String sensorName) {
   // Exibe o valor do sensor no display
   lcd.setCursor(0, 0);
   lcd.print(sensorName + ": ");
+  lcd.setCursor(0, 1);
   lcd.print(sensorValue);
 
   // Acende o LED se o valor lido for maior que o valor máximo correspondente
