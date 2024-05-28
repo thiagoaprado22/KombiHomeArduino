@@ -1,0 +1,67 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Defina o endereço I2C do display LCD
+#define LCD_ADDRESS 0x27
+
+// Define os pinos dos botões
+#define BUTTON_UP 2
+#define BUTTON_DOWN 3
+
+// Inicialize o objeto do display LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Array para armazenar os pinos dos sensores de gás
+const int gasSensorPins[] = {A1, A2, A3}; // Exemplo com 3 sensores, ajuste conforme necessário
+
+// Array para armazenar os nomes dos gases
+const char* gasNames[] = {"Sensor de Alcool ", "Sensor de GLP", "Sensor de CO"}; // Ajuste conforme os gases que você está medindo
+
+// Variáveis para controlar a exibição dos valores dos sensores
+int currentGasIndex = 0;
+
+void setup() {
+  // Inicializa o display LCD
+  lcd.init();
+  lcd.backlight();
+  
+  // Define os pinos dos botões como entrada
+  pinMode(BUTTON_UP, INPUT_PULLUP);
+  pinMode(BUTTON_DOWN, INPUT_PULLUP);
+  
+  // Inicializa a comunicação serial
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Lê o valor do sensor de gás atual
+  int gasValue = analogRead(gasSensorPins[currentGasIndex]);
+  
+  // Exibe o valor do sensor no display LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(gasNames[currentGasIndex]);
+  lcd.setCursor(0, 1);
+  lcd.print("Value: ");
+  lcd.print(gasValue);
+  
+  // Exibe o valor do sensor no monitor serial
+  Serial.print(gasNames[currentGasIndex]);
+  Serial.print(" Value: ");
+  Serial.println(gasValue);
+  
+  // Verifica se o botão UP foi pressionado para navegar para o próximo sensor
+  if (digitalRead(BUTTON_UP) == LOW) {
+    currentGasIndex = (currentGasIndex + 1) % (sizeof(gasSensorPins) / sizeof(gasSensorPins[0]));
+    delay(200); // debounce
+  }
+  
+  // Verifica se o botão DOWN foi pressionado para navegar para o sensor anterior
+  if (digitalRead(BUTTON_DOWN) == LOW) {
+    currentGasIndex = (currentGasIndex - 1 + sizeof(gasSensorPins) / sizeof(gasSensorPins[0])) % (sizeof(gasSensorPins) / sizeof(gasSensorPins[0]));
+    delay(200); // debounce
+  }
+  
+  // Aguarda um curto período de tempo antes da próxima leitura
+  delay(1000);
+}
