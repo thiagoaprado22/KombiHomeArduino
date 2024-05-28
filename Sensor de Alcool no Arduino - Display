@@ -1,0 +1,43 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Defina o endereço I2C do display LCD
+#define LCD_ADDRESS 0x27
+
+// Inicialize o objeto do display LCD
+LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
+
+// Pino do sensor MQ-3
+const int mq3Pin = A0;
+
+void setup() {
+  // Inicializa o display LCD
+  lcd.init();
+  lcd.backlight();
+  
+  // Define o pino do sensor MQ-3 como entrada
+  pinMode(mq3Pin, INPUT);
+  
+  // Inicializa a comunicação serial
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Lê o valor do sensor MQ-3
+  int mq3Value = analogRead(mq3Pin);
+  
+  // Exibe o valor do sensor no display LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("MQ-3 Alcohol");
+  lcd.setCursor(0, 1);
+  lcd.print("Value: ");
+  lcd.print(mq3Value);
+  
+  // Exibe o valor do sensor no monitor serial
+  Serial.print("MQ-3 Alcohol Value: ");
+  Serial.println(mq3Value);
+  
+  // Aguarda um curto período de tempo antes da próxima leitura
+  delay(1000);
+}
