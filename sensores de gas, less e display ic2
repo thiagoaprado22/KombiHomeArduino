@@ -1,0 +1,108 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DHT.h>
+
+// Definição dos pinos dos sensores de gás
+const int sensorPin1 = A0; // Pino analógico para o sensor 1
+const int sensorPin2 = A1; // Pino analógico para o sensor 2
+const int sensorPin3 = A2; // Pino analógico para o sensor 3
+
+// Definição dos pinos dos LEDs
+const int ledPin1 = 2; // Pino digital para o LED 1
+const int ledPin2 = 3; // Pino digital para o LED 2
+const int ledPin3 = 4; // Pino digital para o LED 3
+
+// Definição dos valores máximos para cada sensor de gás
+const int maxValue1 = 200; // Valor máximo para o sensor 1
+const int maxValue2 = 100; // Valor máximo para o sensor 2
+const int maxValue3 = 60; // Valor máximo para o sensor 3
+
+// Inicialização do sensor DHT11
+#define DHTPIN 7          // Pino de dados do sensor DHT11
+#define DHTTYPE DHT11     // Tipo do sensor DHT
+DHT dht(DHTPIN, DHTTYPE); // Inicialização do objeto do sensor DHT
+
+// Inicialização do display LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Variável para controlar as telas do display
+int currentScreen = 0;
+
+void setup() {
+  Serial.begin(9600); // Inicia a comunicação serial
+
+  // Inicialização do sensor DHT11
+  dht.begin();
+
+  // Inicialização do display LCD
+  lcd.init();
+  lcd.backlight();
+
+  // Define os pinos dos LEDs como saída
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
+}
+
+void loop() {
+  // Atualiza o display de acordo com a tela atual
+  switch (currentScreen) {
+    case 0:
+      displaySensorValue(sensorPin1, "Sensor 1");
+      break;
+    case 1:
+      displaySensorValue(sensorPin2, "Sensor 2");
+      break;
+    case 2:
+      displaySensorValue(sensorPin3, "Sensor 3");
+      break;
+    case 3:
+      displayDHTValues();
+      break;
+  }
+
+  // Aguarda 5 segundos antes de mudar para a próxima tela
+  delay(5000);
+
+  // Limpa o display antes de exibir a próxima tela
+  lcd.clear();
+
+  // Incrementa a tela atual
+  currentScreen = (currentScreen + 1) % 4;
+}
+
+void displaySensorValue(int pin, String sensorName) {
+  // Leitura do valor do sensor de gás
+  int sensorValue = analogRead(pin);
+
+  // Exibe o valor do sensor no display
+  lcd.setCursor(0, 0);
+  lcd.print(sensorName + ": ");
+  lcd.print(sensorValue);
+
+  // Acende o LED se o valor lido for maior que o valor máximo correspondente
+  if (pin == sensorPin1) {
+    digitalWrite(ledPin1, sensorValue > maxValue1 ? HIGH : LOW);
+  } else if (pin == sensorPin2) {
+    digitalWrite(ledPin2, sensorValue > maxValue2 ? HIGH : LOW);
+  } else if (pin == sensorPin3) {
+    digitalWrite(ledPin3, sensorValue > maxValue3 ? HIGH : LOW);
+  }
+}
+
+void displayDHTValues() {
+  // Leitura dos valores de temperatura e umidade
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  // Exibe os valores de temperatura e umidade no display
+  lcd.setCursor(0, 0);
+  lcd.print("Temp.: ");
+  lcd.print(temperature);
+  lcd.print(" C");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Umidade: ");
+  lcd.print(humidity);
+  lcd.print(" %");
+}
