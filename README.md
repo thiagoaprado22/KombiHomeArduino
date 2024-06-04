@@ -1,15 +1,2 @@
 # KombiHomeArduino
 Espaço dedicado ao projeto de automação e criatividade da minha Kombi que aos poucos estou transformando em um motor home. 
-****
-****
-****
-****
-Circuito_DS1307_Serial_Monitor
-https://uploads.makerhero.com/wp-content/uploads/2014/06/Circuito_DS1307_Serial_Monitor2.png
-
-
-Termistor NTC
-https://i0.wp.com/portal.vidadesilicio.com.br/wp-content/uploads/2018/07/Steinhart-Hart.jpg?resize=427%2C497&ssl=1
-
-
-[https://lh3.googleusercontent.com/pw/AP1GczNsUKW1A0t_jO6SQdiU8C2hufxRkmS2iC5vOBUfSQefcAFlQr6PH83mmJM_d1Aq-ARVffC0UK_XGlAyZtFQdXfgDorJws8GQgmw_6QYscu3u52IbE18dN68lmA2wB822Tv1BbSmKlbYG9SwV7fTqjq7jmy_3WHv4azM0S2s2Io4HrSvv_bQQWju1nnUiSJgvjPj-Tdw_zvmPpT-IeqZJPgoYqSFRaWEZmW0egvlDWN_fSqmTypNGc_F0vzHNa31UayeKs_S4OxkYMfoFYmbRjvDT8i7ClRU8BpnXYKmyLq4cHBCzdW-tkdm4aBO06GSj62iY9PnCEPSS2_BADewiJVpnfGZ99iCOngKE9e6i7OlLSM75sXnYVNq6SYSsg7KVfie9NuRJTtkQhiX_sF-nGFB6nxjJrt6vvUyzHel3iLusgV6XAwsNm2aJ5w2nqUGrNQti2TtyeK43q-LHyujtnqkr3pLGDntUd_uuLnkR9j185V2LEktfFHoPcDblQy1mneakUvhKIFpW_bUU4q6hgEROgDkEifVzxviYh8JI5tUQiJmqxcDE9MtuqscRSselGqzqdj5UPaq30lkWPcqPlHtKYAExzydwd10HQD5G8jbQmNwYcKpbfjKU3Ncscb_NExnwyBXYZBiH5Z-XP16RG3QhvKq7NDyKBZOJb0hAembAU8GRSJT1aLRkjIj_z-q2m9Ii2w57Dvf1kB8FFqozswsailIDZZYAn-iIM-yE29fSiVcbca-PNChGeucygC7wp-PzkEajDvBYExVuOAz-nPfnnhrF2upfIQ-0XcI0uPRfvNpHtz0XxT07zUvXVUsq9VVhWYHxZBPjdVbW-Dy6wMLnysY9bzc8R6h0uRP8XLjxi3KB44TtfCjDsOjvMtwaC52Jz5cUrTi0YSHNONRM5OS=w1197-h751-s-no-gm?authuser=0](https://photos.app.goo.gl/gRjpxGvgtz7DtuGv5)
