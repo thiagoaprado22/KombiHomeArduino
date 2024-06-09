@@ -1,0 +1,75 @@
+//Biblioteca DHT: Para facilitar a leitura do sensor DHT11.
+//SoftwareSerial: Para comunicação com o módulo Bluetooth HC-05.
+//Componentes Necessários
+//Arduino (Uno, Nano, etc.)
+//Sensor DHT11
+//Módulo Bluetooth HC-05
+//Jumpers
+//Conexões
+//Sensor DHT11:
+//VCC -> 5V no Arduino
+//GND -> GND no Arduino
+//Data -> Pino digital 2 no Arduino
+//Módulo Bluetooth HC-05:
+//VCC -> 5V no Arduino
+//GND -> GND no Arduino
+//TX -> Pino digital 10 no Arduino
+//RX -> Pino digital 11 no Arduino
+//Código Arduino
+
+#include <DHT.h>
+#include <SoftwareSerial.h>
+
+// Definições do sensor DHT11
+#define DHTPIN 2       // Pino digital onde o DHT11 está conectado
+#define DHTTYPE DHT11  // Tipo do sensor DHT
+
+DHT dht(DHTPIN, DHTTYPE);
+
+// Configuração do SoftwareSerial para o módulo Bluetooth
+SoftwareSerial BTSerial(10, 11); // RX, TX
+
+void setup() {
+  // Inicializa a comunicação serial
+  Serial.begin(9600);
+  BTSerial.begin(9600);
+  
+  // Inicializa o sensor DHT
+  dht.begin();
+
+  Serial.println("DHT11 e Bluetooth HC-05 - Iniciando...");
+  BTSerial.println("DHT11 e Bluetooth HC-05 - Iniciando...");
+}
+
+void loop() {
+  // Aguarda alguns segundos entre as leituras
+  delay(2000);
+
+  // Lê a umidade e a temperatura
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  // Verifica se alguma leitura falhou e informa se necessário
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Falha na leitura do sensor DHT11!");
+    BTSerial.println("Falha na leitura do sensor DHT11!");
+    return;
+  }
+
+  // Imprime os valores lidos no Serial Monitor
+  Serial.print("Umidade: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  Serial.print("Temperatura: ");
+  Serial.print(t);
+  Serial.println(" *C");
+
+  // Envia os valores lidos via Bluetooth
+  BTSerial.print("Umidade: ");
+  BTSerial.print(h);
+  BTSerial.print(" %\t");
+  BTSerial.print("Temperatura: ");
+  BTSerial.print(t);
+  BTSerial.println(" *C");
+}
+
