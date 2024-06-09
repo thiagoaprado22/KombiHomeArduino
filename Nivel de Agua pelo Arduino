@@ -1,0 +1,99 @@
+//Para controlar cada LED (verde, amarelo e vermelho) com base em três diferentes níveis de água, usando três sensores de nível de água do tipo interruptor, você pode seguir o esboço abaixo:
+
+//Materiais Necessários:
+//Arduino (Uno, por exemplo)
+//Módulo LED 8mm (vermelho, amarelo, verde)
+//Três sensores de nível de água do tipo interruptor boia
+///Resistores adequados para os LEDs
+//Fios jumpers
+//Protoboard (opcional)
+//Conexões:
+//LED Verde:
+
+//Anodo (perna longa) ao pino digital 2 do Arduino
+//Catodo ao GND (através de um resistor)
+//LED Amarelo:
+
+//Anodo ao pino digital 3 do Arduino
+//Catodo ao GND (através de um resistor)
+//LED Vermelho:
+
+//Anodo ao pino digital 4 do Arduino
+//Catodo ao GND (através de um resistor)
+///Sensor de Nível de Água Baixo:
+
+//Um terminal ao VCC (5V do Arduino)
+//Outro terminal ao pino digital 5 do Arduino (com um resistor pull-down de 10kΩ se necessário)
+//Sensor de Nível de Água Médio:
+
+//Um terminal ao VCC (5V do Arduino)
+//Outro terminal ao pino digital 6 do Arduino (com um resistor pull-down de 10kΩ se necessário)
+//Sensor de Nível de Água Alto:
+
+//Um terminal ao VCC (5V do Arduino)
+//Outro terminal ao pino digital 7 do Arduino (com um resistor pull-down de 10kΩ se necessário)
+
+//Código:
+
+
+// Definindo os pinos dos LEDs
+const int ledVerde = 2;
+const int ledAmarelo = 3;
+const int ledVermelho = 4;
+
+// Definindo os pinos dos sensores de nível de água
+const int sensorNivelBaixo = 5;
+const int sensorNivelMedio = 6;
+const int sensorNivelAlto = 7;
+
+void setup() {
+  // Configurando os pinos dos LEDs como saída
+  pinMode(ledVerde, OUTPUT);
+  pinMode(ledAmarelo, OUTPUT);
+  pinMode(ledVermelho, OUTPUT);
+
+  // Configurando os pinos dos sensores como entrada
+  pinMode(sensorNivelBaixo, INPUT);
+  pinMode(sensorNivelMedio, INPUT);
+  pinMode(sensorNivelAlto, INPUT);
+
+  // Iniciando os LEDs apagados
+  digitalWrite(ledVerde, LOW);
+  digitalWrite(ledAmarelo, LOW);
+  digitalWrite(ledVermelho, LOW);
+}
+
+void loop() {
+  // Lendo o estado dos sensores de nível de água
+  int nivelBaixo = digitalRead(sensorNivelBaixo);
+  int nivelMedio = digitalRead(sensorNivelMedio);
+  int nivelAlto = digitalRead(sensorNivelAlto);
+
+  // Lógica de controle dos LEDs
+  if (nivelAlto == HIGH) {
+    // Nível de água alto: Acender LED verde
+    digitalWrite(ledVerde, HIGH);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, LOW);
+  } else if (nivelMedio == HIGH) {
+    // Nível de água médio: Acender LED amarelo
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, HIGH);
+    digitalWrite(ledVermelho, LOW);
+  } else if (nivelBaixo == HIGH) {
+    // Nível de água baixo: Acender LED vermelho
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, HIGH);
+  } else {
+    // Se nenhum sensor está ativado, todos os LEDs permanecem apagados
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, LOW);
+  }
+
+  // Delay para evitar leituras rápidas demais
+  delay(500);
+}
+
+
