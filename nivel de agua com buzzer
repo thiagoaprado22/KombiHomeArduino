@@ -1,0 +1,70 @@
+// Definindo as portas dos sensores de nível de água
+const int sensor1Pin = 6; // Sensor de nível mais baixo
+const int sensor2Pin = 5; // Sensor de nível intermediário
+const int sensor3Pin = 7; // Sensor de nível mais alto
+
+// Definindo as portas dos LEDs
+const int ledVerdePin = 12;
+const int ledAmareloPin = 11;
+const int ledVermelhoPin = 10;
+
+// Definindo a porta do buzzer
+const int buzzerPin = 13;
+
+void setup() {
+  // Configurando os pinos dos sensores como entradas
+  pinMode(sensor1Pin, INPUT);
+  pinMode(sensor2Pin, INPUT);
+  pinMode(sensor3Pin, INPUT);
+
+  // Configurando os pinos dos LEDs como saídas
+  pinMode(ledVerdePin, OUTPUT);
+  pinMode(ledAmareloPin, OUTPUT);
+  pinMode(ledVermelhoPin, OUTPUT);
+
+  // Configurando o pino do buzzer como saída
+  pinMode(buzzerPin, OUTPUT);
+
+  // Inicializando os LEDs e o buzzer como desligados
+  digitalWrite(ledVerdePin, LOW);
+  digitalWrite(ledAmareloPin, LOW);
+  digitalWrite(ledVermelhoPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+}
+
+void loop() {
+  // Lendo o estado dos sensores
+  bool sensor1State = digitalRead(sensor1Pin);
+  bool sensor2State = digitalRead(sensor2Pin);
+  bool sensor3State = digitalRead(sensor3Pin);
+
+  // Verificando o nível de água e acendendo o LED correspondente
+  if (sensor3State == HIGH) {
+    // Nível mais alto
+    digitalWrite(ledVerdePin, HIGH);
+    digitalWrite(ledAmareloPin, LOW);
+    digitalWrite(ledVermelhoPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  } else if (sensor2State == HIGH) {
+    // Nível intermediário
+    digitalWrite(ledVerdePin, LOW);
+    digitalWrite(ledAmareloPin, HIGH);
+    digitalWrite(ledVermelhoPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  } else if (sensor1State == HIGH) {
+    // Nível mais baixo
+    digitalWrite(ledVerdePin, LOW);
+    digitalWrite(ledAmareloPin, LOW);
+    digitalWrite(ledVermelhoPin, HIGH);
+    digitalWrite(buzzerPin, HIGH); // Ativando o buzzer
+  } else {
+    // Nenhum sensor ativado (nível de água muito baixo)
+    digitalWrite(ledVerdePin, LOW);
+    digitalWrite(ledAmareloPin, LOW);
+    digitalWrite(ledVermelhoPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  }
+
+  // Pequeno atraso para evitar leitura instável
+  delay(100);
+}
